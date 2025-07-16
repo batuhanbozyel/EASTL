@@ -1,18 +1,33 @@
 #-------------------------------------------------------------------------------------------
 # Copyright (C) Electronic Arts Inc.  All rights reserved.
 #-------------------------------------------------------------------------------------------
-cmake_minimum_required(VERSION 3.11)
-include(FetchContent)
+cmake_minimum_required(VERSION 3.13)
 project(EASTL CXX)
+
+#-------------------------------------------------------------------------------------------
+# Defines 
+#-------------------------------------------------------------------------------------------
+add_definitions(-D_CHAR16T)
+
+#-------------------------------------------------------------------------------------------
+# Header only library 
+#-------------------------------------------------------------------------------------------
+add_library(EABase INTERFACE) 
+
+#-------------------------------------------------------------------------------------------
+# Include dirs
+#-------------------------------------------------------------------------------------------
+target_include_directories(EABase INTERFACE include)
+
+#-------------------------------------------------------------------------------------------
+# Installation
+#-------------------------------------------------------------------------------------------
+install(DIRECTORY include/EABase DESTINATION include)
 
 #-------------------------------------------------------------------------------------------
 # Options
 #-------------------------------------------------------------------------------------------
-option(EASTL_BUILD_BENCHMARK "Enable generation of build files for benchmark" OFF)
-option(EASTL_BUILD_TESTS "Enable generation of build files for tests" OFF)
 option(EASTL_STD_ITERATOR_CATEGORY_ENABLED "Enable compatibility with std:: iterator categories" OFF)
-
-
 option(EASTL_DISABLE_APRIL_2024_DEPRECATIONS "Enable use of API marked for removal in April 2024." OFF)
 option(EASTL_DISABLE_SEPT_2024_DEPRECATIONS "Enable use of API marked for removal in September 2024." OFF)
 option(EASTL_DISABLE_APRIL_2025_DEPRECATIONS "Enable use of API marked for removal in April 2025." OFF)
@@ -41,14 +56,6 @@ if (MSVC)
         $<INSTALL_INTERFACE:${EASTL_NATVIS_FILE}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${EASTL_NATVIS_FILE}>
     )
-endif()
-
-if(EASTL_BUILD_BENCHMARK)
-    add_subdirectory(benchmark)
-endif()
-
-if(EASTL_BUILD_TESTS)
-    add_subdirectory(test)
 endif()
 
 #-------------------------------------------------------------------------------------------
